@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class OffBlackout : MonoBehaviour
+public class TurnOffBlackout : MonoBehaviour
 {
     [SerializeField] private Color _startColor;
     [SerializeField] private Color _targetColor;

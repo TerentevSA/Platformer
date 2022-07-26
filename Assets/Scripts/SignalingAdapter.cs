@@ -9,6 +9,8 @@ public class SignalingAdapter : MonoBehaviour
     [SerializeField] private float _step;
 
     private AudioSource _audio;
+    private Coroutine _makeLouder;
+    private Coroutine _makeQuieter;
 
     private void Start()
     {
