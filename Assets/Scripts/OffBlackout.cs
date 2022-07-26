@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelStart : MonoBehaviour
+[RequireComponent(typeof(SpriteRenderer))]
+public class OffBlackout : MonoBehaviour
 {
     [SerializeField] private Color _startColor;
     [SerializeField] private Color _targetColor;
     [SerializeField] private float _duration;
+
     private SpriteRenderer _renderer;
     private float _time;
     private float _normalizeTime;

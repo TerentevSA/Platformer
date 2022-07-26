@@ -12,12 +12,16 @@ public class PlayerMove : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpForce;
+
     private float _userInput;
     private Transform _transform;
     private SpriteRenderer _renderer;
     private Animator _animator;
     private Rigidbody2D _rb;
     private bool _isGrounded;
+
+    private const string _animationRun = "isRun";
+    private const string _animationJump = "isJump";
 
     void Start()
     {
@@ -40,17 +44,17 @@ public class PlayerMove : MonoBehaviour
         {
             _transform.Translate(_speed * _userInput * Time.deltaTime, 0, 0);
             _renderer.flipX = false;
-            _animator.SetBool("isRun", true);
+            _animator.SetBool(_animationRun, true);
         }
         else if (_userInput < 0)
         {
             _transform.Translate(_speed * _userInput * Time.deltaTime, 0, 0);
             _renderer.flipX = true;
-            _animator.SetBool("isRun", true);
+            _animator.SetBool(_animationRun, true);
         }
         else
         {
-            _animator.SetBool("isRun", false);
+            _animator.SetBool(_animationRun, false);
         }
     }
 
@@ -59,7 +63,7 @@ public class PlayerMove : MonoBehaviour
         if(Input.GetAxis("Jump") > 0 && _isGrounded)
         {
             _rb.AddForce(Vector3.up * _jumpForce, ForceMode2D.Impulse);
-            _animator.SetBool("isJump", true);
+            _animator.SetBool(_animationJump, true);
         }
     }
 
@@ -68,7 +72,7 @@ public class PlayerMove : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             _isGrounded = true;
-            _animator.SetBool("isJump", false);
+            _animator.SetBool(_animationJump, false);
         }
     }
 

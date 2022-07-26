@@ -1003,8 +1003,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5fc752f36899b54184a64028ff801ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxVolume: 0
-  _step: 0
+  _maxVolume: 0.06
+  _step: 0.0001
 --- !u!1 &873708936
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,12 +15,23 @@ public class SignalingAdapter : MonoBehaviour
         _audio = GetComponent<AudioSource>();
     }
 
-    public void PlaySignal() => MakeLouder();
-    public void StopSignal() => MakeQuieter();
-
-    private IEnumerable MakeLouder()
+    public void PlaySignal()
     {
-        while(_audio.volume < _maxVolume)
+        StopCoroutine(MakeLouder());
+        StopCoroutine(MakeQuieter());
+        StartCoroutine(MakeLouder());
+    }
+
+    public void StopSignal()
+    {
+        StopCoroutine(MakeQuieter());
+        StopCoroutine(MakeLouder());
+        StartCoroutine(MakeQuieter());
+    }
+
+    private IEnumerator MakeLouder()
+    {
+        while(_audio.volume <= _maxVolume)
         {
             _audio.volume += _step;
 
@@ -28,9 +39,9 @@ public class SignalingAdapter : MonoBehaviour
         }
     }
 
-    private IEnumerable MakeQuieter()
+    private IEnumerator MakeQuieter()
     {
-        while(_audio.volume > 0)
+        while(_audio.volume >= 0)
         {
             _audio.volume -= _step;
 

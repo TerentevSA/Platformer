@@ -12,9 +12,9 @@ public class SignalingLogic : MonoBehaviour
             _playerEnter.Invoke();
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.TryGetComponent<Player>(out Player player))
-            _playerExit?.Invoke();
+            _playerExit.Invoke();
     }
 }
