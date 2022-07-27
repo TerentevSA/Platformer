@@ -9,8 +9,8 @@ public class SignalingAdapter : MonoBehaviour
     [SerializeField] private float _step;
 
     private AudioSource _audio;
-    private Coroutine _makeLouder;
-    private Coroutine _makeQuieter;
+    private Coroutine _makeLouderCoroutine;
+    private Coroutine _makeQuieterCoroutine;
 
     private void Start()
     {
@@ -19,21 +19,30 @@ public class SignalingAdapter : MonoBehaviour
 
     public void PlaySignal()
     {
-        StopCoroutine(MakeLouder());
-        StopCoroutine(MakeQuieter());
-        StartCoroutine(MakeLouder());
+        StopSignalCoroutines();
+
+        _makeLouderCoroutine = StartCoroutine(MakeLouder());
     }
 
     public void StopSignal()
     {
-        StopCoroutine(MakeQuieter());
-        StopCoroutine(MakeLouder());
-        StartCoroutine(MakeQuieter());
+        StopSignalCoroutines();
+
+        _makeQuieterCoroutine = StartCoroutine(MakeQuieter());
+    }
+
+    private void StopSignalCoroutines()
+    {
+        if (_makeLouderCoroutine != null)
+            StopCoroutine(_makeLouderCoroutine);
+
+        if (_makeQuieterCoroutine != null)
+            StopCoroutine(_makeQuieterCoroutine);
     }
 
     private IEnumerator MakeLouder()
     {
-        while(_audio.volume <= _maxVolume)
+        while (_audio.volume <= _maxVolume)
         {
             _audio.volume += _step;
 
@@ -43,7 +52,7 @@ public class SignalingAdapter : MonoBehaviour
 
     private IEnumerator MakeQuieter()
     {
-        while(_audio.volume >= 0)
+        while (_audio.volume >= 0)
         {
             _audio.volume -= _step;
 
