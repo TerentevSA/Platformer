@@ -1,76 +1,60 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-[RequireComponent(typeof(Transform))]
-[RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Rigidbody2D))]
-
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private float _gravity;
+    [SerializeField] private float _minGroundNormalY;
+    [SerializeField] private LayerMask _layerMask;
 
-    private float _userInput;
-    private SpriteRenderer _renderer;
-    private Animator _animator;
+    private Vector2 _direction;
+    private Vector2 _groundNormal;
+    private ContactFilter2D _contactFilter;
+    private RaycastHit2D[] _raycastHit;
     private Rigidbody2D _rb;
     private bool _isGrounded;
 
-    private const string AnimationRun = "isRun";
-    private const string AnimationJump = "isJump";
+    private const float _shellDistance = 0.01f;
 
     private void Start()
     {
-        _renderer = GetComponent<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody2D>();
+        _contactFilter.useTriggers = false;
+        _contactFilter.layerMask = _layerMask;
+        _contactFilter.useLayerMask = true;
+        _raycastHit = new RaycastHit2D[16];
     }
 
     private void Update()
     {
-        _userInput = Input.GetAxis("Horizontal");
+        _direction = new Vector2(Input.GetAxisRaw("Horizontal") * _speed, 0);
 
-        if (_userInput > 0)
-        {
-            gameObject.transform.Translate(_speed * _userInput * Time.deltaTime, 0, 0);
-            _renderer.flipX = false;
-            _animator.SetBool(AnimationRun, true);
-        }
-        else if (_userInput < 0)
-        {
-            gameObject.transform.Translate(_speed * _userInput * Time.deltaTime, 0, 0);
-            _renderer.flipX = true;
-            _animator.SetBool(AnimationRun, true);
-        }
-        else
-        {
-            _animator.SetBool(AnimationRun, false);
-        }
-
-        if (Input.GetAxis("Jump") > 0 && _isGrounded)
-        {
-            _rb.AddForce(Vector3.up * _jumpForce, ForceMode2D.Impulse);
-            _animator.SetBool(AnimationJump, true);
-        }
+        if (Input.GetKey(KeyCode.Space) && _isGrounded)
+            _direction.y = _jumpForce;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void FixedUpdate()
     {
-        if (collision.gameObject.TryGetComponent<Ground>(out Ground ground))
-        {
-            _isGrounded = true;
-            _animator.SetBool(AnimationJump, false);
-        }
+        _isGrounded = false;
+        Move();
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private Vector2 GetDirectionAlongSurface(Vector2 direction)
     {
-        if (collision.gameObject.TryGetComponent<Ground>(out Ground ground))
-        {
-            _isGrounded = false;
-        }
+
+    }
+
+    private void Move()
+    {
+        Vector2 velocity;
+
+        velocity = GetDirectionAlongSurface(_direction.normalized);
+        velocity = velocity * _speed * Time.deltaTime;
+        _rb.position += velocity;
     }
 }
