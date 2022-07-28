@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,11 +14,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _direction;
     private Vector2 _groundNormal;
     private ContactFilter2D _contactFilter;
-    private RaycastHit2D[] _raycastHit;
+    private List<RaycastHit2D> _raycastHit;
     private Rigidbody2D _rb;
     private bool _isGrounded;
-
-    private const float _shellDistance = 0.01f;
 
     private void Start()
     {
@@ -27,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
         _contactFilter.useTriggers = false;
         _contactFilter.layerMask = _layerMask;
         _contactFilter.useLayerMask = true;
-        _raycastHit = new RaycastHit2D[16];
+        _raycastHit = new List<RaycastHit2D>();
     }
 
     private void Update()
@@ -41,20 +38,41 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         _isGrounded = false;
+        _raycastHit.Clear();
+        _groundNormal = Vector2.zero;
+        _direction += Physics2D.gravity * _gravity;
+        _direction *= Time.deltaTime;
+        _rb.Cast(_direction, _contactFilter, _raycastHit, _direction.magnitude);
+
+        for(int i = 0; i < _raycastHit.Count; i++)
+        {
+            if (_raycastHit[i].collider.gameObject.GetComponent<Ground>())
+            {
+                _isGrounded = true;
+                _groundNormal = _raycastHit[i].normal;
+                break;
+            }
+        }
+
         Move();
-    }
-
-    private Vector2 GetDirectionAlongSurface(Vector2 direction)
-    {
-
     }
 
     private void Move()
     {
-        Vector2 velocity;
+        if (true)
+        {
+            Debug.Log(_direction);
+            _direction = _direction - Vector2.Dot(_direction, _groundNormal) * _groundNormal;
+            Debug.Log(_direction);
+        }
+        _rb.MovePosition(_rb.position + _direction);
+    }
 
-        velocity = GetDirectionAlongSurface(_direction.normalized);
-        velocity = velocity * _speed * Time.deltaTime;
-        _rb.position += velocity;
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(_groundNormal.x, _groundNormal.y) * 3);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(_direction.x, _direction.y));
     }
 }
