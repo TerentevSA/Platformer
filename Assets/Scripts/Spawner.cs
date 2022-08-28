@@ -12,7 +12,6 @@ public class Spawner : MonoBehaviour
     private void Start()
     {
         _spawnPoints = gameObject.GetComponentsInChildren<SpawnPoint>();
-
         StartCoroutine(SpawnEnemy());
     }
 
