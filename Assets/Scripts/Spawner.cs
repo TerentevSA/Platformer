@@ -8,17 +8,10 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _delay;
 
     private SpawnPoint[] _spawnPoints;
-    List<Transform> _spawnPositions;
 
     private void Start()
     {
-        _spawnPositions = new List<Transform>();
         _spawnPoints = gameObject.GetComponentsInChildren<SpawnPoint>();
-
-        for(int i = 0; i < _spawnPoints.Length; i++)
-        {
-            _spawnPositions.Add(_spawnPoints[i].transform);
-        }
 
         StartCoroutine(SpawnEnemy());
     }
@@ -30,9 +23,9 @@ public class Spawner : MonoBehaviour
 
         for(; ; )
         {
-            Instantiate(_enemy, _spawnPositions[i].position, _spawnPositions[i].rotation);
+            Instantiate(_enemy, _spawnPoints[i].transform.position, _spawnPoints[i].transform.rotation);
 
-            if(i + 1 == _spawnPositions.Count)
+            if(i + 1 == _spawnPoints.Length)
                 i = 0;
             else
                 i++;
