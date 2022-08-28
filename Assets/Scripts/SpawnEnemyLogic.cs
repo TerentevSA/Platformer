@@ -25,13 +25,9 @@ public class SpawnEnemyLogic : MonoBehaviour
             Instantiate(_enemy, _spawnPoints[i].transform.position, _spawnPoints[i].transform.rotation);
 
             if(i + 1 == _spawnPoints.Length)
-            {
                 i = 0;
-            }
             else
-            {
                 i++;
-            }
 
             yield return new WaitForSeconds( _timeToSpawn );
         }
