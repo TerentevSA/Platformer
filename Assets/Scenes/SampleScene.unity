@@ -1326,9 +1326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemy: {fileID: 5348365402017955271, guid: e66ccfe216d921c4489abcfa44665c35, type: 3}
-  _timeToSpawn: 2
-  _spawnPoints: []
-  _spawnPointTag: SpawnPoint
+  _delay: 2
 --- !u!4 &1100717498
 Transform:
   m_ObjectHideFlags: 0
